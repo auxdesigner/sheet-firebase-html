@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style type="text/css">
+	body {
+		padding: 40px;
+		margin: 0 auto;
+		font-family: "Roboto";
+		width: 600px;
+	}
+	h1 {
+		color: #444A57; text-align: center;
+		font-weight: normal;
+		margin-bottom: 30px;
+	}
+	h1 img {
+		vertical-align: text-top;
+		margin-right: 10px;
+		/*animation-name: spin;
+    	animation-duration: 20000ms;
+    	animation-iteration-count: infinite;
+    	animation-timing-function: linear;*/
+	}
+	@keyframes spin { 
+        from { 
+            transform: rotate(0deg); 
+        } to { 
+            transform: rotate(360deg); 
+        }
+    }
+	#container {
+		border: 1px solid #eee;
+		border-radius: 8px;
+	}
+	.row {
+		padding: 10px 20px 10px 20px;
+		height: 40px;
+		line-height: 40px;
+		color: #444A57;
+		position: relative;
+	}
+	.row:first-child .num:before {
+		content: '';
+		width: 24px;
+    	height: 24px;
+    	position: absolute;
+		background: url('img/gold.svg');
+		background-size: contain;
+    	top: 17px;
+    	right: 40px;
+	}
+	.row:nth-child(2) .num:before {
+		content: '';
+		width: 24px;
+    	height: 24px;
+    	position: absolute;
+		background: url('img/silver.svg');
+		background-size: contain;
+    	top: 17px;
+    	right: 40px;
+	}
+	.row:nth-child(3) .num:before {
+		content: '';
+		width: 24px;
+    	height: 24px;
+    	position: absolute;
+		background: url('img/bronze.svg');
+		background-size: contain;
+    	top: 17px;
+    	right: 40px;
+	}
+	.num {
+		float: right;
+	}
+	.people {
+		float: left;
+	}
+	.photo {
+		float: left; 
+		width: 40px; height: 40px;
+		margin-right: 20px; border-radius: 50%;
+	}
+	.row:nth-child(even){
+		background: #f5f5f5;
+	}
+	.clear {
+		clear: both; height: 0;
+	}
+	footer {
+		text-align: center;
+		margin-top: 30px;
+		font-size: 12px;
+	}
+	footer a {
+		color: #05c500;
+	}
+</style>
+</head>
+<body>
+	<h1><img src="img/logo.svg" width="36" height="36">App name</h1>
+	<div id="container">
+		<!-- <div id="people"></div>
+		<div id="num"></div>
+		<div class="clear">&nbsp;</div> -->
+	</div>
+	<footer>Dummy data powered by <a href="#" target="_blank">this Google Sheet</a></footer>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-database.js"></script>
+
+
+<script>
+	var firebaseConfig = {
+		apiKey: "__________",
+		authDomain: "__________.firebaseapp.com",
+		databaseURL: "https://__________.firebaseio.com/",
+		projectId: "__________"
+	};
+	firebase.initializeApp(firebaseConfig);
+
+	var ref = firebase.database().ref();
+	var data = [];	
+
+	ref.on("value", function(firebaseData) {
+		var firebaseData = firebaseData.val();
+		for(var i in firebaseData) {
+			console.log(firebaseData[i]);
+			//console.log(firebaseData[i].name);
+			data.push(firebaseData[i])
+		}
+		console.log(data);
+		data.sort(function(a, b) {
+		    return b.fixed - a.fixed;
+		});
+		console.log(data);
+
+		for(var i in data) {
+
+
+			var row = document.createElement("div"); 
+			document.getElementById("container").appendChild(row)
+			row.classList.add("row");
+			row.classList.add(data[i].name);
+
+			var photo = document.createElement("img"); 
+			photo.src = "img/" + data[i].name + ".png"
+			row.appendChild(photo);
+			photo.classList.add("photo");
+
+			var people = document.createElement("div"); 
+			people.innerHTML = data[i].name; 
+			row.appendChild(people);
+			people.classList.add("people");
+
+			var num = document.createElement("div"); 
+			num.innerHTML = data[i].fixed; 
+			row.appendChild(num);
+			num.classList.add("num");
+
+			
+		}
+	});
+
+	
+
+</script>
+
+</body>
+
+</html>
